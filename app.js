@@ -31,7 +31,7 @@ async function addManager() {
       },
       {
         type: "input",
-        message: "What is the manager's Office Phone Number?",
+        message: "What is the manager's Office Number?",
         name: "managerOfficeNo",
       },
     ])
@@ -131,18 +131,16 @@ async function addAnother() {
     .prompt([
       {
         type: "list",
-        message: "Would you like to add anver employee?",
+        message: "Would you like to add another employee?",
         name: "choice",
-        choices: ["Add Manager", "Add Engineer", "Add Intern", "Done Adding"],
+        choices: ["Add Engineer", "Add Intern", "Done Adding"],
       },
     ])
     .then(function (answer) {
-      if (answer.choice === "Add Manager") {
+      if (answer.choice === "Add Engineer") {
         addManager();
-      } else if (answer.choice === "Add Engineer") {
-        addEngineer();
       } else if (answer.choice === "Add Intern") {
-        addIntern();
+        addEngineer();
       } else {
         createHtml();
       }
