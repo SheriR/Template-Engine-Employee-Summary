@@ -46,7 +46,7 @@ function start() {
       console.log(`${data.managerName} has been added!`);
       teamMember = fs.readFileSync("templates/manager.html");
       teamHTML = teamHTML + "\n" + eval("`" + teamMember + "`");
-      //team.push(manager);
+      //teamHTML.push(manager);
       addAnother();
     });
 }
@@ -127,7 +127,7 @@ function addIntern() {
       console.log(`${data.internName} has been added!`);
       teamMember = fs.readFileSync("templates/intern.html");
       teamHTML = teamHTML + "\n" + eval("`" + teamMember + "`");
-      // team.push(intern);
+      // teamHTML.push(intern);
       addAnother();
     });
 }
