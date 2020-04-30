@@ -4,19 +4,20 @@ const Manager = require("./lib/Manager");
 
 const fs = require("fs");
 const inquirer = require("inquirer");
+const util = require("util");
+const writeFileAsync = util.promisify(fs.writeFile);
 
-let managers = [];
-let engineers = [];
-let interns = [];
+let teamHTML = "";
+//let employees = [];
 
-async function addManager() {
-  console.log("Lets add your manager(s)");
+function start() {
+  console.log("Lets build your team.");
 
-  await inquirer
+  inquirer
     .prompt([
       {
         type: "input",
-        message: "What is the manager's name?",
+        message: "What is your manager's name?",
         name: "managerName",
       },
       {
@@ -35,23 +36,25 @@ async function addManager() {
         name: "managerOfficeNo",
       },
     ])
-    .then(function (answer) {
-      const newManager = new Manager(
-        answer.managerName,
-        answer.employeeId,
-        answer.managerEmail,
-        answer.managerofficeNo
+    .then((data) => {
+      const manager = new Manager(
+        data.managerName,
+        data.managerId,
+        data.managerEmail,
+        data.managerOfficeNo
       );
-      console.log(`${answer.managerName} has been added!`);
-      managers.push(newManager);
+      console.log(`${data.managerName} has been added!`);
+      teamMember = fs.readFileSync("templates/manager.html");
+      teamHTML = teamHTML + "\n" + eval("`" + teamMember + "`");
+      //team.push(manager);
       addAnother();
     });
 }
 
-async function addEngineer() {
+function addEngineer() {
   console.log("Lets add your Engineer");
 
-  await inquirer
+  inquirer
     .prompt([
       {
         type: "input",
@@ -74,23 +77,24 @@ async function addEngineer() {
         name: "engineerGitHub",
       },
     ])
-    .then(function (answer) {
-      const newEngineer = new Engineer(
-        answer.engineerName,
-        answer.engineerId,
-        answer.engineerEmail,
-        answer.engineerGitHub
+    .then((data) => {
+      const engineer = new Engineer(
+        data.engineerName,
+        data.engineerId,
+        data.engineerEmail,
+        data.engineerGitHub
       );
-      console.log(`${answer.engineerName} has been added!`);
-      engineers.push(newEngineer);
+      console.log(`${data.engineerName} has been added!`);
+      teamMember = fs.readFileSync("templates/engineer.html");
+      teamHTML = teamHTML + "\n" + eval("`" + teamMember + "`");
       addAnother();
     });
 }
 
-async function addIntern() {
+function addIntern() {
   console.log("Lets add your Intern");
 
-  await inquirer
+  inquirer
     .prompt([
       {
         type: "input",
@@ -113,39 +117,50 @@ async function addIntern() {
         name: "internSchool",
       },
     ])
-    .then(function (answer) {
-      const newIntern = new Intern(
-        answer.internName,
-        answer.internId,
-        answer.internEmail,
-        answer.internSchool
+    .then((data) => {
+      const intern = new Intern(
+        data.internName,
+        data.internId,
+        data.internEmail,
+        data.internSchool
       );
-      console.log(`${answer.internName} has been added!`);
-      interns.push(newIntern);
+      console.log(`${data.internName} has been added!`);
+      teamMember = fs.readFileSync("templates/intern.html");
+      teamHTML = teamHTML + "\n" + eval("`" + teamMember + "`");
+      // team.push(intern);
       addAnother();
     });
 }
 
-async function addAnother() {
-  await inquirer
+function addAnother() {
+  inquirer
     .prompt([
       {
         type: "list",
-        message: "Would you like to add another employee?",
+        message: "Chose the role of your next team member",
         name: "choice",
         choices: ["Add Engineer", "Add Intern", "Done Adding"],
       },
     ])
-    .then(function (answer) {
-      if (answer.choice === "Add Engineer") {
-        addManager();
-      } else if (answer.choice === "Add Intern") {
+    .then(function (data) {
+      if (data.choice === "Add Engineer") {
         addEngineer();
+      } else if (data.choice === "Add Intern") {
+        addIntern();
       } else {
-        createHtml();
+        const mainHTML = fs.readFileSync("templates/main.html");
+        teamHTML = eval("`" + mainHTML + "`");
+
+        fs.writeFile("output/team.html", teamHTML, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          {
+            console.log("Check the output folder for the team.html.");
+          }
+        });
       }
     });
 }
 
-function createHtml() {}
-addManager();
+start();
