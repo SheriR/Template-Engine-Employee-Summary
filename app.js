@@ -10,6 +10,14 @@ const writeFileAsync = util.promisify(fs.writeFile);
 let teamHTML = "";
 //let employees = [];
 
+function ValidateEmail(input) {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(input)) {
+    return true;
+  } else {
+    return "Please enter a valid email address!";
+  }
+}
+
 function start() {
   console.log("Lets build your team.");
 
@@ -29,6 +37,7 @@ function start() {
         type: "input",
         message: "What is the manager's email?",
         name: "managerEmail",
+        validate: ValidateEmail,
       },
       {
         type: "input",
@@ -70,6 +79,7 @@ function addEngineer() {
         type: "input",
         message: "What is the engineer's email?",
         name: "engineerEmail",
+        validate: ValidateEmail,
       },
       {
         type: "input",
@@ -110,6 +120,7 @@ function addIntern() {
         type: "input",
         message: "What is the intern's email?",
         name: "internEmail",
+        validate: ValidateEmail,
       },
       {
         type: "input",
